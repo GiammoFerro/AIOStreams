@@ -29,7 +29,7 @@ jobs:
           node-version: lts/*
 
       - name: Install step
-        run: "npm install"
+        run: "npm i"
 
       - name: Build step
         run: "npm run build"
@@ -37,8 +37,8 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "gianmarcofe-aiostreams-69"
-          entrypoint: "server"
-          root: "packages/server/dist"
+          project: "gianmarcofe-aiostreams-25"
+          entrypoint: "packages/server/dist/server.js"
+          root: "."
           
           
