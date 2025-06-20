@@ -767,7 +767,7 @@ export class AIOStreams {
         // will not send a request to AIOStreams for other id prefixes even though our other addon that didn't specify
         // an id prefix technically says it supports all ids
         if (existing) {
-          existing.types = [...new Set([...existing.types, ...resource.types])];
+          existing.types = [...new Set([...(existing.types || []), ...(resource.types || [])])];
           // if (resource.idPrefixes) {
           //   existing.idPrefixes = existing.idPrefixes || [];
           //   existing.idPrefixes = [
@@ -777,10 +777,10 @@ export class AIOStreams {
         } else {
           this.finalResources.push({
             ...resource,
-            idPrefixes: undefined,
-            // idPrefixes: resource.idPrefixes
-            //   ? [...resource.idPrefixes]
-            //   : undefined,
+            types: resource.types || [], // Ensure types is never undefined
+            idPrefixes: resource.idPrefixes 
+              ? [...new Set(resource.idPrefixes)]
+              : undefined,
           });
         }
       }
@@ -810,8 +810,12 @@ export class AIOStreams {
         );
       }
 
-      this.supportedResources[instanceId] = addonResources;
-    }
+     this.supportedResources[instanceId] = addonResources.map(resource => ({
+        ...resource,
+        name: resource.name,
+        types: resource.types || [], // Ensure types is always a defined array
+        idPrefixes: resource.idPrefixes
+      }));    }
 
     logger.verbose(
       `Parsed all catalogs and determined the following catalogs: ${JSON.stringify(
